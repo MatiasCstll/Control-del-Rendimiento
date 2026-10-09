@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+// ¡IMPORTANTE! Aquí importamos tu cliente Prisma configurado (db.ts)
+// NO importamos de "@prisma/client" ni creamos un "new PrismaClient()"
+import prisma from "@/src/prisma/db";
 
 export async function GET() {
   try {
@@ -21,7 +21,6 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
     const { lote, fecha, paddy, blanco, rendimiento, etapa, estado } = body;
 
     // Validación básica
@@ -34,28 +33,16 @@ export async function POST(req: NextRequest) {
 
     const nuevo = await prisma.registroRendimiento.create({
       data: {
-        lote,
+        loteSilo: lote, // Ajustado al nombre de tu schema.prisma
         fecha: new Date(fecha),
-        paddy,
-        blanco,
-        rendimiento,
-        etapa,
-        estado,
-      } as any,
+        variedad: "Desconocida", // Ajustado a tu schema (puedes cambiarlo luego)
+        rendimiento: Number(rendimiento) || 0, // Ajustado a tu schema
+      },
     });
 
     return NextResponse.json(nuevo, { status: 201 });
   } catch (error: any) {
     console.error(error);
-
-    // Error de lote duplicado
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        { message: "Ya existe un registro con ese número de lote" },
-        { status: 409 }
-      );
-    }
-
     return NextResponse.json(
       { message: "Error al crear el registro" },
       { status: 500 }
