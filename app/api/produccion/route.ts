@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const registros = await prisma.produccion.findMany({
+    const registros = await prisma.registroRendimiento.findMany({
       orderBy: { fecha: "desc" },
     });
     return NextResponse.json(registros);
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const nuevo = await prisma.produccion.create({
+    const nuevo = await prisma.registroRendimiento.create({
       data: {
         lote,
         fecha: new Date(fecha),
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         rendimiento,
         etapa,
         estado,
-      },
+      } as any,
     });
 
     return NextResponse.json(nuevo, { status: 201 });

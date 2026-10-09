@@ -1,9 +1,15 @@
-import 'dotenv/config';
-import postgres from '@prisma/orm-postgres/runtime';
-import type { Contract } from './contract.d';
-import contractJson from './contract.json' with { type: 'json' };
+import { PrismaClient } from '@prisma/client'
 
-export const db = postgres<Contract>({
-  contractJson,
-  url: process.env['DATABASE_URL']!,
-});
+const prismaClientSingleton = () => {
+  return new PrismaClient()
+}
+
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>
+}
+
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+
+export default prisma
+
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
