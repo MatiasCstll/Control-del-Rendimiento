@@ -7,21 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de prueba
-model Producto {
-  id     Int    @id @default(autoincrement())
-  nombre String
-  precio Float
-}
-model Produccion {
-  id          String   @id @default(cuid())
-  lote        String   @unique
-  fecha       DateTime
-  paddy       Float
-  blanco      Float
-  rendimiento Float
-  etapa       String?
-  estado      String   @default("En proceso") // "En proceso" | "Completado"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model RegistroRendimiento {
+  id          Int      @id @default(autoincrement())
+  variedad    String   // Ejemplo: tipo de arroz
+  rendimiento Float    // Rendimiento en toneladas
+  loteSilo    String
+  fecha       DateTime @default(now())
 }
