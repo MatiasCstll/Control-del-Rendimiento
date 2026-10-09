@@ -13,3 +13,15 @@ model Producto {
   nombre String
   precio Float
 }
+model Produccion {
+  id          String   @id @default(cuid())
+  lote        String   @unique
+  fecha       DateTime
+  paddy       Float
+  blanco      Float
+  rendimiento Float
+  etapa       String?
+  estado      String   @default("En proceso") // "En proceso" | "Completado"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

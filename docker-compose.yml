@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 42603706
+      POSTGRES_DB: mi-proyecto
+    ports:
+      - "5433:5432"
